@@ -4,3 +4,4 @@ __pycache
 .env.dev
 .env
 .env.prod.db
+db.sqlite3

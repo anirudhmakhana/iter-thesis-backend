@@ -5,6 +5,7 @@ services:
     build:
       context: ./iterthesisproject
       dockerfile: Dockerfile.prod
+    image: anirudhmakhanakmitl/web:latest
     command: gunicorn iterthesisproject.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - static_volume:/home/app/web/staticfiles
