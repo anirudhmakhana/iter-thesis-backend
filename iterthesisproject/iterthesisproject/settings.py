@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'account',
     'itinerary',
+    'places',
+    'django.contrib.postgres',
 ]
 
 MIDDLEWARE = [
