@@ -1,6 +1,6 @@
 *.pyc
 __pycache
 .DS_Store
-.env.dev
-.env
-.env.prod.db
+# .env.dev
+# .env
+# .env.prod.db
