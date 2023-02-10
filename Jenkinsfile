@@ -4,20 +4,20 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'docker-compose -f Docker-compose.prod.yml build'
+                sh 'sudo docker-compose -f Docker-compose.prod.yml build'
             }
         }
 
         stage('Deploy') {
             steps {
-                sh 'docker-compose -f Docker-compose.prod.yml up -d'
+                sh 'sudo docker-compose -f Docker-compose.prod.yml up -d'
             }
         }
 
         stage('Setting up Django') {
             steps {
-                sh 'docker-compose -f Docker-compose.prod.yml exec web python manage.py migrate --noinput'
-                sh 'docker-compose -f Docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear'
+                sh 'sudo docker-compose -f Docker-compose.prod.yml exec web python manage.py migrate --noinput'
+                sh 'sudo docker-compose -f Docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear'
             }
         }
     }
