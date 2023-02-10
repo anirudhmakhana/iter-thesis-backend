@@ -10,7 +10,6 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'sudo chmod +x entrypoint.prod.sh'
                 sh 'sudo docker-compose -f Docker-compose.prod.yml up -d'
             }
         }
