@@ -10,6 +10,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
+                sh 'sudo chmod +x /var/lib/jenkins/workspace/backend/iterthesisproject/entrypoint.prod.sh'
                 sh 'sudo docker-compose -f Docker-compose.prod.yml up -d'
             }
         }
