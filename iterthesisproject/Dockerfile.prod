@@ -40,7 +40,7 @@ RUN mkdir -p /home/app
 # # create the app user
 RUN addgroup -S app && adduser -S app -G app
 # create the jenkins user
-RUN addgroup -S jenkins && adduser -S jenkins -G jenkins
+# RUN addgroup -S jenkins && adduser -S jenkins -G jenkins
 
 # create the appropriate directories
 ENV HOME=/home/app
@@ -58,7 +58,7 @@ RUN pip install --no-cache /wheels/*
 # RUN ["chmod", "+x", "./entrypoint.prod.sh"]
 COPY ./entrypoint.prod.sh .
 RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.prod.sh
-RUN chmod 755  $APP_HOME/entrypoint.prod.sh
+RUN chmod a+x  $APP_HOME/entrypoint.prod.sh
 
 # copy project
 COPY . $APP_HOME
@@ -66,13 +66,13 @@ RUN python3 manage.py collectstatic --noinput
 
 # chown all the files to the app user
 RUN chown -R app:app $APP_HOME
-RUN chown -R jenkins:jenkins $APP_HOME
+# RUN chown -R jenkins:jenkins $APP_HOME
 
 
 # # change to the app user
-# USER app
+USER app
 # change to the jenkins user
-USER jenkins
+# USER jenkins
 
 # run entrypoint.prod.sh
 ENTRYPOINT ["/home/app/web/entrypoint.prod.sh"]
