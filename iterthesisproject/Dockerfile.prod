@@ -53,10 +53,11 @@ COPY --from=builder /usr/src/app/requirements.txt .
 RUN pip install --no-cache /wheels/*
 
 # copy entrypoint.prod.sh
+RUN RUN ["chmod", "+x", "/var/lib/jenkins/workspace/backend/iterthesisproject/entrypoint.prod.sh"]
 COPY ./entrypoint.prod.sh .
 RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.prod.sh
-# RUN chmod +x  $APP_HOME/entrypoint.prod.sh
-RUN ["chmod", "+x", "/home/app/web/entrypoint.prod.sh"]
+RUN chmod +x  $APP_HOME/entrypoint.prod.sh
+# RUN ["chmod", "+x", "/home/app/web/entrypoint.prod.sh"]
 
 # copy project
 COPY . $APP_HOME
