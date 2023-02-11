@@ -37,8 +37,10 @@ FROM python:3.10-alpine
 # create directory for the app user
 RUN mkdir -p /home/app
 
-# create the app user
-RUN addgroup -S app && adduser -S app -G app
+# # create the app user
+# RUN addgroup -S app && adduser -S app -G app
+# create the jenkins user
+RUN addgroup -S jenkins && adduser -S jenkins -G jenkins
 
 # create the appropriate directories
 ENV HOME=/home/app
@@ -63,10 +65,14 @@ COPY . $APP_HOME
 RUN python3 manage.py collectstatic --noinput
 
 # chown all the files to the app user
-RUN chown -R app:app $APP_HOME
+# RUN chown -R app:app $APP_HOME
+RUN chown jenkins:jenkins $APP_HOME/entrypoint.prod.sh
 
-# change to the app user
-USER app
+
+# # change to the app user
+# USER app
+# change to the jenkins user
+USER jenkins
 
 # run entrypoint.prod.sh
 ENTRYPOINT ["/home/app/web/entrypoint.prod.sh"]
