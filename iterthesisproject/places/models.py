@@ -40,14 +40,10 @@ class OpeningHour(models.Model):
     closing_time = models.TimeField()
   
 class Fee(models.Model):
-    thai_child = models.FloatField()
-    thai_adult = models.FloatField()
-    foreigner_child = models.FloatField()
-    foreigner_adult = models.FloatField() 
-
-class Room(models.Model):
-    room_type = models.CharField(max_length=100)
-    bd_type = models.CharField(max_length=100)
+    thai_child = models.FloatField(default=0)
+    thai_adult = models.FloatField(default=0)
+    foreigner_child = models.FloatField(default=0)
+    foreigner_adult = models.FloatField(default=0) 
 
 class Place(models.Model): 
     place_name = models.CharField(max_length=255)
@@ -60,23 +56,30 @@ class Place(models.Model):
     detail = models.TextField()
     destination = models.CharField(max_length=255)
     category_code = ArrayField(models.CharField(max_length=100), blank=True)
-
-    def __str__(self):
-        return self.name
+    category_description = models.CharField(max_length=255, default='')
+    how_to_travels = ArrayField(models.CharField(max_length=100), blank=True, default=list)
+    mobile_picture_urls = ArrayField(models.CharField(max_length=100), blank=True, default=list)
+    web_picture_urls = ArrayField(models.CharField(max_length=100), blank=True, default=list)
+    payment_methods = ArrayField(models.CharField(max_length=100), blank=True, default=list)
+    facilities = ArrayField(models.CharField(max_length=100), blank=True, default=list)
+    services = ArrayField(models.CharField(max_length=100), blank=True, default=list)
 
 class Accommodation(Place):
     hotel_star = models.CharField(max_length=255)
     register_license_id = models.CharField(max_length=255)
     display_checkin_time = models.TimeField()
-    display_checkin_time = models.TimeField()
     number_of_rooms = models.IntegerField()
     price_range = models.CharField(max_length=255)
     standard = models.CharField(max_length=255)
-    awards = ArrayField(models.CharField(max_length=100), blank=True)
+    awards = ArrayField(models.CharField(max_length=100), blank=True, default=list)
     hit_score = models.CharField(max_length=255)
-    accomodation_types = ArrayField(models.CharField(max_length=100), blank=True)
-    accomodation_rooms = ArrayField(models.CharField(max_length=100), blank=True)
-    
+    accomodation_types = ArrayField(models.CharField(max_length=100), blank=True, default=list)
+    accomodation_rooms = ArrayField(models.CharField(max_length=100), blank=True, default=list)
+
+class Room(models.Model):
+    room_type = models.CharField(max_length=100)
+    bd_type = models.CharField(max_length=100)
+    accommodation = models.ForeignKey(Accommodation, on_delete=models.CASCADE, related_name='rooms', null=True)
 
 class Restaurant(Place):
     standard = models.CharField(max_length=255)
@@ -99,5 +102,5 @@ class Attraction(Place):
     tags = ArrayField(models.CharField(max_length=100), blank=True)
     targets = ArrayField(models.CharField(max_length=100), blank=True)
     activities = ArrayField(models.CharField(max_length=100), blank=True)
-    fee = models.OneToOneField(Fee, on_delete=models.CASCADE)
+    fee = models.OneToOneField(Fee, on_delete=models.CASCADE, related_name='attraction_fee')
     opening_hours = models.ManyToManyField(OpeningHour, related_name='attraction_opening_hours')  
