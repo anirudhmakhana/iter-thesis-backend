@@ -34,8 +34,8 @@ class PlaceAdmin(admin.ModelAdmin):
             'fields': ('how_to_travels',)
         }),
     )
-    filter_horizontal = ('category_code', 'facilities', 'services', 'how_to_travels',
-                         'mobile_picture_urls', 'web_picture_urls', 'payment_methods')
+    # filter_horizontal = ('category_code', 'facilities', 'services', 'how_to_travels',
+    #                      'mobile_picture_urls', 'web_picture_urls', 'payment_methods')
 
 @admin.register(Accommodation)
 class AccommodationAdmin(admin.ModelAdmin):
@@ -61,7 +61,7 @@ class AttractionAdmin(admin.ModelAdmin):
     list_display = ['id', 'place_name', 'destination', 'hit_score']
     search_fields = ['place_name', 'destination', 'hit_score']
     list_filter = ['destination', 'attraction_types', 'targets', 'activities']
-    filter_horizontal = ['tags', 'targets', 'activities']
+    # filter_horizontal = ['tags', 'targets', 'activities']
     readonly_fields = ['id']
 
 @admin.register(Location)
