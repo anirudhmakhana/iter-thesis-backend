@@ -4,6 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+                sh 'whoami'
                 sh 'sudo docker-compose -f Docker-compose.prod.yml build'
             }
         }
