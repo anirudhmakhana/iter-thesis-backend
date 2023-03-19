@@ -16,8 +16,7 @@ services:
       - ./.env
     depends_on:
       - db
-    user:
-      - root
+    user: app:app # the user field should be in the format <user>:<group>
   db:
     image: postgres:13.0-alpine
     volumes:
