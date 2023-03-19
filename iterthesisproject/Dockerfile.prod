@@ -5,6 +5,9 @@
 # pull official base image
 FROM python:3.10-alpine as builder
 
+# Set the user to root
+USER root
+
 # set work directory
 WORKDIR /usr/src/app
 
