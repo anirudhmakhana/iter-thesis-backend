@@ -5,14 +5,14 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'whoami'
-                sh 'sudo docker-compose -f Docker-compose.prod.yml build'
+                sh 'docker-compose -f Docker-compose.prod.yml build'
             }
         }
 
         stage('Deploy') {
             steps {
                 sh 'chmod +x /var/lib/jenkins/workspace/backend/iterthesisproject/entrypoint.prod.sh'
-                sh 'sudo docker-compose -f Docker-compose.prod.yml up -d'
+                sh 'docker-compose -f Docker-compose.prod.yml up -d'
             }
         }
 
