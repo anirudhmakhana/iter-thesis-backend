@@ -5,3 +5,4 @@ __pycache
 # .env
 # .env.prod.db
 db.sqlite3
+docker-commands.txt
