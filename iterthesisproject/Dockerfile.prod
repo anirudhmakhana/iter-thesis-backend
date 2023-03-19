@@ -68,12 +68,12 @@ COPY . $APP_HOME
 RUN python3 manage.py collectstatic --noinput
 
 # chown all the files to the app user
-RUN chown -R app:app $APP_HOME
+RUN chown -R root:root $APP_HOME
 # RUN chown -R jenkins:jenkins $APP_HOME
 
 
 # # change to the app user
-USER app
+# USER app
 # change to the jenkins user
 # USER jenkins
 
