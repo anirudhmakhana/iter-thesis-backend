@@ -170,7 +170,7 @@ class AccommodationDetailView(APIView):
 #         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class RestaurantView(APIView):
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAuthenticated,)
     http_method_names = ['get', 'post']
 
     def get(self, request):
@@ -186,7 +186,7 @@ class RestaurantView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class RestaurantDetailView(APIView):
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self, pk):
         try:
