@@ -79,4 +79,5 @@ RUN chown -R root:root $APP_HOME
 # USER jenkins
 
 # run entrypoint.prod.sh
-ENTRYPOINT ["/home/app/web/entrypoint.prod.sh"]
+# ENTRYPOINT ["/home/app/web/entrypoint.prod.sh"]
+CMD ["/home/app/web/entrypoint.prod.sh"]
