@@ -18,7 +18,7 @@ pipeline {
 
         stage('Setting up Django') {
             steps {
-                sh 'docker-compose -f Docker-compose.prod.yml exec web python manage.py migrate --noinput'
+                sh 'docker-compose -f Docker-compose.prod.yml exec -T web python manage.py migrate --noinput'
                 sh 'docker-compose -f Docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear'
             }
         }
