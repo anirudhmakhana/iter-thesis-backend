@@ -22,5 +22,17 @@ pipeline {
                 sh 'docker-compose -f Docker-compose.prod.yml exec -T web python manage.py collectstatic --no-input --clear'
             }
         }
+
+        stage('Test Accounts') {
+            steps {
+                sh 'docker-compose -f Docker-compose.prod.yml exec -T web python manage.py test account'
+            }
+        }
+
+        stage('Test Places') {
+            steps {
+                sh 'docker-compose -f Docker-compose.prod.yml exec -T web python manage.py test places'
+            }
+        }
     }
 }

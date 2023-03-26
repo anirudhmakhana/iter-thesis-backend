@@ -8,6 +8,8 @@ from collections import OrderedDict
 from rest_framework import serializers
 from .models import Itinerary, Agenda
 
+import requests
+
 # class AgendaSerializer(serializers.ModelSerializer):
 #     place = serializers.PrimaryKeyRelatedField(many=True, queryset=Place.objects.all())
 
@@ -182,7 +184,7 @@ class ItinerarySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Itinerary
-        fields = ['id', 'destination', 'owner', 'co_travelers', 'plan']
+        fields = ['id', 'destination', 'owner', 'co_travelers', 'plan', 'start_date', 'end_date', 'start_time', 'end_time']
 
     def create(self, validated_data):
         print(validated_data.keys())
@@ -202,3 +204,4 @@ class ItinerarySerializer(serializers.ModelSerializer):
             itinerary.co_travelers.add(traveler)
 
         return itinerary
+    

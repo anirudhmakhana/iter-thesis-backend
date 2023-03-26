@@ -11,6 +11,10 @@ class Agenda(models.Model):
 
 class Itinerary(models.Model):
     destination = models.CharField(max_length=100, default='', null=False)
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
+    start_time = models.TimeField(null=True)
+    end_time = models.TimeField(null=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='itineraries_owned')
     co_travelers = models.ManyToManyField(User, related_name='itineraries_joined',  blank=True)
     plan = models.ManyToManyField(Agenda)
