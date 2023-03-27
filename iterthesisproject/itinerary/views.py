@@ -208,3 +208,30 @@ class ItineraryDetailView(APIView):
         itinerary = self.get_itinerary(pk)
         itinerary.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+'''
+Caching data and shit like that
+''' 
+class RequestItineraryView(APIView):
+    def post(self, request):
+        # //TODO: Return answer to the question.
+        
+        # Retrieve data from the request, e.g. budget, travel dates, etc.
+        budget = request.data.get('budget')
+        start_date = request.data.get('start_date')
+        end_date = request.data.get('end_date')
+
+        # Generate a cache key based on the request data
+        cache_key = f'request_itinerary_{budget}_{start_date}_{end_date}'
+
+        # # Check if the response is already cached
+        # response = cache.get(cache_key)
+        # if response:
+        #     return Response(response)
+
+        # # If the response is not cached, generate the itinerary and cache the response
+        # itinerary = generate_itinerary(budget, start_date, end_date)  # some function to generate the itinerary
+        # response = {'itinerary': itinerary}  # create the response payload
+        # cache.set(cache_key, response, timeout=3600)  # cache the response for 1 hour
+
+        return Response(response)
