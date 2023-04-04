@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from itinerary.models import Itinerary, Agenda
-from itinerary.serializers import ItinerarySerializer, AgendaSerializer
+from itinerary.models import Itinerary, Agenda, UserPreference
+from itinerary.serializers import ItinerarySerializer, AgendaSerializer, UserPreferenceSerializer
 
 class AgendaListCreateView(APIView):
     """
@@ -209,29 +209,90 @@ class ItineraryDetailView(APIView):
         itinerary.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-'''
-Caching data and shit like that
-''' 
-class RequestItineraryView(APIView):
-    def post(self, request):
-        # //TODO: Return answer to the question.
+# '''
+# Caching data and shit like that
+# ''' 
+# class RequestItineraryView(APIView):
+#     def post(self, request):
+#         # //TODO: Return answer to the question.
         
-        # Retrieve data from the request, e.g. budget, travel dates, etc.
-        budget = request.data.get('budget')
-        start_date = request.data.get('start_date')
-        end_date = request.data.get('end_date')
+#         # Retrieve data from the request, e.g. budget, travel dates, etc.
+#         budget = request.data.get('budget')
+#         start_date = request.data.get('start_date')
+#         end_date = request.data.get('end_date')
 
-        # Generate a cache key based on the request data
-        cache_key = f'request_itinerary_{budget}_{start_date}_{end_date}'
+#         # Generate a cache key based on the request data
+#         cache_key = f'request_itinerary_{budget}_{start_date}_{end_date}'
 
-        # # Check if the response is already cached
-        # response = cache.get(cache_key)
-        # if response:
-        #     return Response(response)
+#         # # Check if the response is already cached
+#         # response = cache.get(cache_key)
+#         # if response:
+#         #     return Response(response)
 
-        # # If the response is not cached, generate the itinerary and cache the response
-        # itinerary = generate_itinerary(budget, start_date, end_date)  # some function to generate the itinerary
-        # response = {'itinerary': itinerary}  # create the response payload
-        # cache.set(cache_key, response, timeout=3600)  # cache the response for 1 hour
+#         # # If the response is not cached, generate the itinerary and cache the response
+#         # itinerary = generate_itinerary(budget, start_date, end_date)  # some function to generate the itinerary
+#         # response = {'itinerary': itinerary}  # create the response payload
+#         # cache.set(cache_key, response, timeout=3600)  # cache the response for 1 hour
 
-        return Response(response)
+#         return Response(response)
+    
+class UserPreferenceView(APIView):
+    """
+    List all user preferences or create a new one
+    """
+    permission_classes = (IsAuthenticated,)
+    def get(self, request, format=None):
+        user_preferences = UserPreference.objects.all()
+        serializer = UserPreferenceSerializer(user_preferences, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = UserPreferenceSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # def post(self, request, format=None):
+    #     serializer = UserPreferenceSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         user_preference = serializer.save(user=request.user) # pass in the user object
+            
+    #         # Send a POST request to another server with the user's preferences
+    #         url = "http://example.com/preferences/"
+    #         data = serializer.data
+    #         response = requests.post(url, json=data)
+    #         if response.status_code == 200:
+    #             user_preference.sent_to_server = True
+    #             user_preference.save()
+            
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UserPreferenceDetail(APIView):
+    """
+    Retrieve, update or delete a user preference instance
+    """
+    def get_object(self, pk):
+        try:
+            return UserPreference.objects.get(pk=pk)
+        except UserPreference.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        user_preference = self.get_object(pk)
+        serializer = UserPreferenceSerializer(user_preference)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        user_preference = self.get_object(pk)
+        serializer = UserPreferenceSerializer(user_preference, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        user_preference = self.get_object(pk)
+        user_preference.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

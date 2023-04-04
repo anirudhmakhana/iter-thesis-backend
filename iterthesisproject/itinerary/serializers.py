@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.shortcuts import get_object_or_404
-from .models import Itinerary, Agenda
+from .models import Itinerary, Agenda, UserPreference
 from places.serializers import Place, PlaceSerializer, Accommodation,AccommodationSerializer, Restaurant ,RestaurantSerializer,Shop ,ShopSerializer, AttractionSerializer, Attraction
 from account.models import User
 from collections import OrderedDict
@@ -69,3 +69,7 @@ class ItinerarySerializer(serializers.ModelSerializer):
 
         return itinerary
     
+class UserPreferenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserPreference
+        fields = ['destination', 'start_date', 'end_date', 'start_time', 'end_time', 'budget', 'tripType', 'targetTypes', 'preferredActivities', 'preferredCuisine', 'dietRestrictions']
