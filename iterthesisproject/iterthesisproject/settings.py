@@ -32,11 +32,13 @@ ALLOWED_HOSTS = ['*']
 CORS_ALLOWED_ORIGINS = [
     # "https://example.com",
     # "https://sub.example.com",
-    # "http://localhost:8080",
+    "http://dev.se.kmitl.ac.th:1337",
     "http://127.0.0.1:3000",
 ]
+
 CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:1337', 'http://localhost:1337', 'http://dev.se.kmitl.ac.th:1337', 'https://dev.se.kmitl.ac.th:1337']
 
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
