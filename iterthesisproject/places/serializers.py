@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Place, Accommodation, Shop, Attraction, Restaurant, Contact, Location, SHA, OpeningHour, Fee
+from .models import Place, Accommodation, Shop, Attraction, Restaurant, Contact, Location, SHA, OpeningHour, Fee, Michelin
 
 class ContactSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,6 +24,11 @@ class OpeningHourSerializer(serializers.ModelSerializer):
 class FeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Fee
+        fields = '__all__'
+
+class MichelinSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Michelin
         fields = '__all__'
 
 class AccommodationSerializer(serializers.ModelSerializer):
@@ -59,10 +64,43 @@ class AccommodationSerializer(serializers.ModelSerializer):
         }
         raise serializers.ValidationError(errors)
     
+# class ShopSerializer(serializers.ModelSerializer):
+#     location = LocationSerializer()
+#     sha = SHASerializer()
+#     contact = ContactSerializer()
+
+#     class Meta:
+#         model = Shop
+#         fields = '__all__'
+
+#     def create(self, validated_data):
+#         location_data = validated_data.pop('location')
+#         sha_data = validated_data.pop('sha')
+#         contact_data = validated_data.pop('contact')
+
+#         location_serializer = LocationSerializer(data=location_data)
+#         sha_serializer = SHASerializer(data=sha_data)
+#         contact_serializer = ContactSerializer(data=contact_data)
+
+#         if location_serializer.is_valid() and sha_serializer.is_valid() and contact_serializer.is_valid():
+#             location = location_serializer.save()
+#             sha = sha_serializer.save()
+#             contact = contact_serializer.save()
+#             shop = Shop.objects.create(location=location, sha=sha, contact=contact, **validated_data)
+#             return shop
+
+#         # Raise validation error if any serializer fails
+#         errors = {
+#             'location': location_serializer.errors,
+#             'sha': sha_serializer.errors,
+#             'contact': contact_serializer.errors
+#         }
+#         raise serializers.ValidationError(errors)
 class ShopSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
     sha = SHASerializer()
     contact = ContactSerializer()
+    opening_hours = OpeningHourSerializer(many=True)
 
     class Meta:
         model = Shop
@@ -72,23 +110,29 @@ class ShopSerializer(serializers.ModelSerializer):
         location_data = validated_data.pop('location')
         sha_data = validated_data.pop('sha')
         contact_data = validated_data.pop('contact')
+        opening_hours_data = validated_data.pop('opening_hours')
 
         location_serializer = LocationSerializer(data=location_data)
         sha_serializer = SHASerializer(data=sha_data)
         contact_serializer = ContactSerializer(data=contact_data)
+        opening_hours_serializer = OpeningHourSerializer(data=opening_hours_data, many=True)
 
-        if location_serializer.is_valid() and sha_serializer.is_valid() and contact_serializer.is_valid():
+        if location_serializer.is_valid() and sha_serializer.is_valid() and contact_serializer.is_valid() and opening_hours_serializer.is_valid():
             location = location_serializer.save()
             sha = sha_serializer.save()
             contact = contact_serializer.save()
+            opening_hours = opening_hours_serializer.save()
+
             shop = Shop.objects.create(location=location, sha=sha, contact=contact, **validated_data)
+            shop.opening_hours.set(opening_hours)
             return shop
 
         # Raise validation error if any serializer fails
         errors = {
             'location': location_serializer.errors,
             'sha': sha_serializer.errors,
-            'contact': contact_serializer.errors
+            'contact': contact_serializer.errors,
+            'opening_hours': opening_hours_serializer.errors,
         }
         raise serializers.ValidationError(errors)
 
@@ -142,6 +186,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
     sha = SHASerializer()
     contact = ContactSerializer()
     opening_hours = OpeningHourSerializer(many=True)
+    michelines = MichelinSerializer(many=True, allow_null=True, required=False)
 
     class Meta:
         model = Restaurant
@@ -152,20 +197,26 @@ class RestaurantSerializer(serializers.ModelSerializer):
         sha_data = validated_data.pop('sha')
         contact_data = validated_data.pop('contact')
         opening_hours_data = validated_data.pop('opening_hours')
+        michelines_data = validated_data.pop('michelines')
+        print(michelines_data)
 
         location_serializer = LocationSerializer(data=location_data)
         sha_serializer = SHASerializer(data=sha_data)
         contact_serializer = ContactSerializer(data=contact_data)
         opening_hours_serializer = OpeningHourSerializer(data=opening_hours_data, many=True)
+        michelines_serializer = MichelinSerializer(data=michelines_data, many=True)
 
-        if location_serializer.is_valid() and sha_serializer.is_valid() and contact_serializer.is_valid() and opening_hours_serializer.is_valid():
+
+        if location_serializer.is_valid() and sha_serializer.is_valid() and contact_serializer.is_valid() and opening_hours_serializer.is_valid() and michelines_serializer.is_valid():
             location = location_serializer.save()
             sha = sha_serializer.save()
             contact = contact_serializer.save()
             opening_hours = opening_hours_serializer.save()
+            michelines = michelines_serializer.save()
 
             restaurant = Restaurant.objects.create(location=location, sha=sha, contact=contact, **validated_data)
             restaurant.opening_hours.set(opening_hours)
+            restaurant.michelines.set(michelines)
             return restaurant
 
         # Raise validation error if any serializer fails
@@ -173,7 +224,8 @@ class RestaurantSerializer(serializers.ModelSerializer):
             'location': location_serializer.errors,
             'sha': sha_serializer.errors,
             'contact': contact_serializer.errors,
-            'opening_hours': opening_hours_serializer.errors
+            'opening_hours': opening_hours_serializer.errors,
+            'michelines': michelines_serializer.errors
         }
         raise serializers.ValidationError(errors)
 
