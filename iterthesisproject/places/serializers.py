@@ -35,10 +35,40 @@ class AccommodationSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
     sha = SHASerializer()
     contact = ContactSerializer()
-
+    place_id = serializers.CharField(source='id', required=True, write_only=True)
+    
     class Meta:
         model = Accommodation
-        fields = '__all__'
+        fields = (
+            'place_id',
+            'place_name',
+            'latitude',
+            'longitude',
+            'location',
+            'sha',
+            'contact',
+            'introduction',
+            'detail',
+            'destination',
+            'category_code',
+            'category_description',
+            'how_to_travels',
+            'mobile_picture_urls',
+            'web_picture_urls',
+            'payment_methods',
+            'facilities',
+            'services',
+            'hotel_star',
+            'register_license_id',
+            'display_checkin_time',
+            'number_of_rooms',
+            'price_range',
+            'standard',
+            'awards',
+            'hit_score',
+            'accomodation_types',
+            'accomodation_rooms'
+        )
 
     def create(self, validated_data):
         location_data = validated_data.pop('location')
@@ -100,11 +130,34 @@ class ShopSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
     sha = SHASerializer()
     contact = ContactSerializer()
+    place_id = serializers.CharField(source='id', required=True, write_only=True)
     opening_hours = OpeningHourSerializer(many=True)
 
     class Meta:
         model = Shop
-        fields = '__all__'
+        fields = (
+            'place_id',
+            'place_name',
+            'latitude',
+            'longitude',
+            'location',
+            'sha',
+            'contact',
+            'introduction',
+            'detail',
+            'destination',
+            'category_code',
+            'category_description',
+            'how_to_travels',
+            'mobile_picture_urls',
+            'web_picture_urls',
+            'payment_methods',
+            'facilities',
+            'services',
+            'standard'
+            'shop_type',
+            'opening_hours'
+        )
 
     def create(self, validated_data):
         location_data = validated_data.pop('location')
@@ -140,12 +193,39 @@ class AttractionSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
     sha = SHASerializer()
     contact = ContactSerializer()
+    place_id = serializers.CharField(source='id', required=True, write_only=True)
     opening_hours = OpeningHourSerializer(many=True)
     fee = FeeSerializer()
 
     class Meta:
         model = Attraction
-        fields = '__all__'
+        fields = (
+            'place_id',
+            'place_name',
+            'latitude',
+            'longitude',
+            'location',
+            'sha',
+            'contact',
+            'introduction',
+            'detail',
+            'destination',
+            'category_code',
+            'category_description',
+            'how_to_travels',
+            'mobile_picture_urls',
+            'web_picture_urls',
+            'payment_methods',
+            'facilities',
+            'services',
+            'hit_scores',
+            'attraction_types',
+            'tags',
+            'targets',
+            'activities',
+            'fee',
+            'opening_hours'
+        )
 
     def create(self, validated_data):
         location_data = validated_data.pop('location')
@@ -186,11 +266,39 @@ class RestaurantSerializer(serializers.ModelSerializer):
     sha = SHASerializer()
     contact = ContactSerializer()
     opening_hours = OpeningHourSerializer(many=True)
+    place_id = serializers.CharField(source='id', required=True, write_only=True)
     michelines = MichelinSerializer(many=True, allow_null=True, required=False)
 
     class Meta:
         model = Restaurant
-        fields = '__all__'
+        fields = (
+            'place_id',
+            'place_name',
+            'latitude',
+            'longitude',
+            'location',
+            'sha',
+            'contact',
+            'introduction',
+            'detail',
+            'destination',
+            'category_code',
+            'category_description',
+            'how_to_travels',
+            'mobile_picture_urls',
+            'web_picture_urls',
+            'payment_methods',
+            'facilities',
+            'services',
+            'standard',
+            'awards',
+            'hit_score',
+            'restaurant_types',
+            'cuisine_types',
+            'tags',
+            'opening_hours',
+            'michelines',
+        )
 
     def create(self, validated_data):
         location_data = validated_data.pop('location')
@@ -233,15 +341,23 @@ class PlaceSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
     sha = SHASerializer()
     contact = ContactSerializer()
+    place_id = serializers.CharField(source='id', required=True, write_only=True)
 
     class Meta:
         model = Place
-        fields = '__all__'
+        # fields = '__all__'
+        fields = ['place_id', 'place_name', 'latitude', 'longitude', 'sha', 'location', 'contact',
+                  'introduction', 'detail', 'destination', 'category_code', 'category_description',
+                  'how_to_travels', 'mobile_picture_urls', 'web_picture_urls', 'payment_methods',
+                  'facilities', 'services']
 
     def create(self, validated_data):
         location_data = validated_data.pop('location')
         sha_data = validated_data.pop('sha')
         contact_data = validated_data.pop('contact')
+        print(validated_data)
+        
+        # id = validated_data.pop('place_id')
 
         location_serializer = LocationSerializer(data=location_data)
         sha_serializer = SHASerializer(data=sha_data)
