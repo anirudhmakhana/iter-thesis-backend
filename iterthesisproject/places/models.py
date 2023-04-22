@@ -57,7 +57,7 @@ class Place(models.Model):
     sha = models.ForeignKey(SHA, on_delete=models.CASCADE, blank=True, null=True)
     location = models.ForeignKey(Location, on_delete=models.CASCADE, blank=True, null=True)
     contact = models.ForeignKey(Contact, on_delete=models.CASCADE, blank=True, null=True)
-    introduction = models.CharField(max_length=255, blank=True, null=True)
+    introduction = models.CharField(max_length=2500, blank=True, null=True)
     detail = models.TextField(blank=True, null=True)
     destination = models.CharField(max_length=255, blank=True, null=True)
     category_code = models.CharField(max_length=255, default='')

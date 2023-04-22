@@ -4,6 +4,8 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from .models import Place, Accommodation, Restaurant, Shop, Attraction
 from .serializers import PlaceSerializer, AccommodationSerializer, RestaurantSerializer, ShopSerializer, AttractionSerializer
+from django.db import IntegrityError
+from rest_framework.exceptions import ValidationError
 
 
 class PlaceView(APIView):
@@ -20,8 +22,11 @@ class PlaceView(APIView):
     def post(self, request):
         serializer = PlaceSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            try:
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except IntegrityError:
+                raise ValidationError("Place with this ID already exists.")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class PlaceDetailView(APIView):
@@ -105,8 +110,11 @@ class AccommodationView(APIView):
     def post(self, request):
         serializer = AccommodationSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            try:
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except IntegrityError:
+                raise ValidationError("Accommodation with this ID already exists.")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AccommodationDetailView(APIView):
@@ -181,8 +189,11 @@ class RestaurantView(APIView):
     def post(self, request):
         serializer = RestaurantSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            try:
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except IntegrityError:
+                raise ValidationError("Restaurant with this ID already exists.")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class RestaurantDetailView(APIView):
@@ -257,8 +268,11 @@ class ShopView(APIView):
     def post(self, request):
         serializer = ShopSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            try:
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except IntegrityError:
+                raise ValidationError("Shop with this ID already exists.")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ShopDetailView(APIView):
@@ -322,10 +336,12 @@ class ShopDetailView(APIView):
 #         shop.delete()
 #         return Response(status=status.HTTP_204_NO_CONTENT)
 
+from django.db import IntegrityError
+from rest_framework.exceptions import ValidationError
+
 class AttractionView(APIView):
     permission_classes = (IsAuthenticated,)
     http_method_names = ['get', 'post']
-
 
     def get(self, request):
         attractions = Attraction.objects.all()
@@ -333,11 +349,13 @@ class AttractionView(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        print(request.method)
         serializer = AttractionSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            try:
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except IntegrityError:
+                raise ValidationError("Attraction with this ID already exists.")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AttractionDetailView(APIView):
