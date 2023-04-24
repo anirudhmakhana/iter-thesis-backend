@@ -154,7 +154,7 @@ class ShopSerializer(serializers.ModelSerializer):
             'payment_methods',
             'facilities',
             'services',
-            'standard'
+            'standard',
             'shop_type',
             'opening_hours'
         )
