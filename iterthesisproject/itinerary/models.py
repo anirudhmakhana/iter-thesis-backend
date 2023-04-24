@@ -1,7 +1,8 @@
 from django.db import models
 from account.models import User
 from places.models import Place
-from django.contrib.postgres.fields import ArrayField, JSONField
+from django.contrib.postgres.fields import ArrayField
+from django.db.models import JSONField
 
 # Create your models here.
 class Agenda(models.Model):
