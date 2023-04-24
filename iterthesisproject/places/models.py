@@ -18,26 +18,26 @@ class SHA(models.Model):
 
 class Contact(models.Model):
     mobile_number = ArrayField(
-        models.CharField(max_length=100), blank=True
+        models.CharField(max_length=100), blank=True, default=list
     )
     phone_number = ArrayField(
-        models.CharField(max_length=100), blank=True
+        models.CharField(max_length=100), blank=True, default=list
     )
     fax_number = ArrayField(
-        models.CharField(max_length=100), blank=True
+        models.CharField(max_length=100), blank=True, default=list
     )
     emails = ArrayField(
-        models.EmailField(max_length=100), blank=True
+        models.EmailField(max_length=100), blank=True, default=list
     )
     urls = ArrayField(
-        models.URLField(max_length=200), blank=True
+        models.URLField(max_length=200), blank=True, default=list
     )
 
 #Class used in Restaurant, Shop, Attraction
 class OpeningHour(models.Model):
     day = models.CharField(max_length=255)
-    opening_time = models.TimeField()
-    closing_time = models.TimeField()
+    opening_time = models.TimeField(null=True, blank=True)
+    closing_time = models.TimeField(null=True, blank=True)
   
 class Fee(models.Model):
     thai_child = models.FloatField(default=0)
@@ -63,21 +63,21 @@ class Place(models.Model):
     category_code = models.CharField(max_length=255, default='')
     category_description = models.CharField(max_length=255, default='')
     how_to_travels = ArrayField(models.CharField(max_length=100), blank=True, default=list)
-    mobile_picture_urls = ArrayField(models.CharField(max_length=100), blank=True)
-    web_picture_urls = ArrayField(models.CharField(max_length=100), blank=True)
+    mobile_picture_urls = ArrayField(models.CharField(max_length=100), blank=True, null=True)
+    web_picture_urls = ArrayField(models.CharField(max_length=100), blank=True, null=True)
     payment_methods = ArrayField(models.CharField(max_length=100), blank=True, default=list)
     facilities = ArrayField(models.CharField(max_length=100), blank=True, default=list, null=True)
     services = ArrayField(models.CharField(max_length=100), blank=True, default=list, null=True)
 
 class Accommodation(Place):
-    hotel_star = models.CharField(max_length=255)
-    register_license_id = models.CharField(max_length=255)
-    display_checkin_time = models.TimeField()
-    number_of_rooms = models.IntegerField()
+    hotel_star = models.CharField(max_length=255, blank=True)
+    register_license_id = models.CharField(max_length=255, blank=True, null=True)
+    display_checkin_time = models.TimeField(blank=True, null=True)
+    number_of_rooms = models.IntegerField(blank=True)
     price_range = models.CharField(max_length=255)
-    standard = models.CharField(max_length=255)
-    awards = ArrayField(models.CharField(max_length=100), blank=True, default=list)
-    hit_score = models.CharField(max_length=255)
+    standard = models.CharField(max_length=255, blank=True, null=True)
+    awards = ArrayField(models.CharField(max_length=100, blank=True), blank=True, null=True, default=list)
+    hit_score = models.CharField(max_length=255, blank=True)
     accomodation_types = ArrayField(models.CharField(max_length=100), blank=True, default=list)
     accomodation_rooms = ArrayField(models.CharField(max_length=100), blank=True, default=list)
 
@@ -88,25 +88,25 @@ class Room(models.Model):
 
 class Restaurant(Place):
     standard = models.CharField(max_length=255, blank=True)
-    awards = ArrayField(models.CharField(max_length=100), blank=True, null=True) 
+    awards = ArrayField(models.CharField(max_length=100), blank=True, null=True, default=list) 
     hit_score = models.CharField(max_length=255)
     restaurant_types = ArrayField(models.CharField(max_length=100), blank=True)
     cuisine_types = ArrayField(models.CharField(max_length=100), blank=True)
     # michelines = models.CharField(max_length=255)
     tags = ArrayField(models.CharField(max_length=100), blank=True, null=True)
-    opening_hours = models.ManyToManyField(OpeningHour, related_name='restaurant_opening_hours', null=True)
+    opening_hours = models.ManyToManyField(OpeningHour, related_name='restaurant_opening_hours', null=True, blank=True, default=list)
     michelines = models.ManyToManyField(Michelin, blank=True)
 
 class Shop(Place): 
-    standard = models.CharField(max_length=255)
+    standard = models.CharField(max_length=255, null=True, blank=True)
     shop_type = ArrayField(models.CharField(max_length=100),  blank=True) 
-    opening_hours = models.ManyToManyField(OpeningHour, related_name='shop_opening_hours')
+    opening_hours = models.ManyToManyField(OpeningHour, related_name='shop_opening_hours', null=True, blank=True, default=list)
 
 class Attraction(Place):
     hit_score = models.CharField(max_length=255)
-    attraction_types = ArrayField(models.CharField(max_length=100), blank=True)
-    tags = ArrayField(models.CharField(max_length=100), blank=True)
-    targets = ArrayField(models.CharField(max_length=100), blank=True)
-    activities = ArrayField(models.CharField(max_length=100), blank=True)
+    attraction_types = ArrayField(models.CharField(max_length=100), blank=True, null=True)
+    tags = ArrayField(models.CharField(max_length=100), blank=True, null=True)
+    targets = ArrayField(models.CharField(max_length=100), blank=True, null=True)
+    activities = ArrayField(models.CharField(max_length=100), blank=True, null=True)
     fee = models.OneToOneField(Fee, on_delete=models.CASCADE, related_name='attraction_fee')
-    opening_hours = models.ManyToManyField(OpeningHour, related_name='attraction_opening_hours')  
+    opening_hours = models.ManyToManyField(OpeningHour, related_name='attraction_opening_hours', null=True, blank=True, default=list)

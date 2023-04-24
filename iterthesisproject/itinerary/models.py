@@ -1,12 +1,16 @@
 from django.db import models
 from account.models import User
 from places.models import Place
-from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.fields import ArrayField, JSONField
 
 # Create your models here.
 class Agenda(models.Model):
     place = models.ForeignKey(Place, on_delete=models.CASCADE, related_name='agenda_place')
     date = models.DateField()
+    '''
+    {other_place: 10, other_placeA: 25, ...}
+    '''
+    travel_time = JSONField(default=dict)
     arrival_time = models.TimeField()
     leave_time = models.TimeField()
 
@@ -32,4 +36,3 @@ class UserPreference(models.Model):
     targetTypes = ArrayField(models.CharField(max_length=100))
     preferredActivities = ArrayField(models.CharField(max_length=100))
     preferredCuisine = ArrayField(models.CharField(max_length=100))
-    dietRestrictions = ArrayField(models.CharField(max_length=100))

@@ -154,7 +154,7 @@ class ShopSerializer(serializers.ModelSerializer):
             'payment_methods',
             'facilities',
             'services',
-            'standard',
+            'standard'
             'shop_type',
             'opening_hours'
         )
@@ -218,7 +218,7 @@ class AttractionSerializer(serializers.ModelSerializer):
             'payment_methods',
             'facilities',
             'services',
-            'hit_score',
+            'hit_scores',
             'attraction_types',
             'tags',
             'targets',
