@@ -36,8 +36,8 @@ class Contact(models.Model):
 #Class used in Restaurant, Shop, Attraction
 class OpeningHour(models.Model):
     day = models.CharField(max_length=255)
-    opening_time = models.TimeField(null=True, blank=True)
-    closing_time = models.TimeField(null=True, blank=True)
+    opening_time = models.CharField(max_length=255, null=True, blank=True)
+    closing_time = models.CharField(max_length=255, null=True, blank=True)
   
 class Fee(models.Model):
     thai_child = models.FloatField(default=0)
@@ -99,7 +99,7 @@ class Restaurant(Place):
 
 class Shop(Place): 
     standard = models.CharField(max_length=255, null=True, blank=True)
-    shop_type = ArrayField(models.CharField(max_length=100),  blank=True) 
+    shop_type = ArrayField(models.CharField(max_length=100, blank=True, null=True),  blank=True, null=True) 
     opening_hours = models.ManyToManyField(OpeningHour, related_name='shop_opening_hours', null=True, blank=True, default=list)
 
 class Attraction(Place):

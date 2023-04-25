@@ -156,7 +156,7 @@ class ShopSerializer(serializers.ModelSerializer):
             'services',
             'standard',
             'shop_type',
-            'opening_hours'
+            'opening_hours',
         )
 
     def create(self, validated_data):
@@ -224,7 +224,7 @@ class AttractionSerializer(serializers.ModelSerializer):
             'targets',
             'activities',
             'fee',
-            'opening_hours'
+            'opening_hours',
         )
 
     def create(self, validated_data):
