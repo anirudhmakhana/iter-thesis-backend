@@ -218,7 +218,7 @@ class AttractionSerializer(serializers.ModelSerializer):
             'payment_methods',
             'facilities',
             'services',
-            'hit_scores',
+            'hit_score',
             'attraction_types',
             'tags',
             'targets',
@@ -267,7 +267,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
     contact = ContactSerializer()
     opening_hours = OpeningHourSerializer(many=True)
     place_id = serializers.CharField(source='id', required=True, write_only=True)
-    michelines = MichelinSerializer(many=True, allow_null=True, required=False)
+    michelins = MichelinSerializer(many=True, allow_null=True, required=False)
 
     class Meta:
         model = Restaurant
@@ -297,7 +297,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
             'cuisine_types',
             'tags',
             'opening_hours',
-            'michelines',
+            'michelins',
         )
 
     def create(self, validated_data):
@@ -305,26 +305,26 @@ class RestaurantSerializer(serializers.ModelSerializer):
         sha_data = validated_data.pop('sha')
         contact_data = validated_data.pop('contact')
         opening_hours_data = validated_data.pop('opening_hours')
-        michelines_data = validated_data.pop('michelines')
-        print(michelines_data)
+        michelins_data = validated_data.pop('michelins')
+        print(michelins_data)
 
         location_serializer = LocationSerializer(data=location_data)
         sha_serializer = SHASerializer(data=sha_data)
         contact_serializer = ContactSerializer(data=contact_data)
         opening_hours_serializer = OpeningHourSerializer(data=opening_hours_data, many=True)
-        michelines_serializer = MichelinSerializer(data=michelines_data, many=True)
+        michelins_serializer = MichelinSerializer(data=michelins_data, many=True)
 
 
-        if location_serializer.is_valid() and sha_serializer.is_valid() and contact_serializer.is_valid() and opening_hours_serializer.is_valid() and michelines_serializer.is_valid():
+        if location_serializer.is_valid() and sha_serializer.is_valid() and contact_serializer.is_valid() and opening_hours_serializer.is_valid() and michelins_serializer.is_valid():
             location = location_serializer.save()
             sha = sha_serializer.save()
             contact = contact_serializer.save()
             opening_hours = opening_hours_serializer.save()
-            michelines = michelines_serializer.save()
+            michelins = michelins_serializer.save()
 
             restaurant = Restaurant.objects.create(location=location, sha=sha, contact=contact, **validated_data)
             restaurant.opening_hours.set(opening_hours)
-            restaurant.michelines.set(michelines)
+            restaurant.michelins.set(michelins)
             return restaurant
 
         # Raise validation error if any serializer fails
@@ -333,7 +333,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
             'sha': sha_serializer.errors,
             'contact': contact_serializer.errors,
             'opening_hours': opening_hours_serializer.errors,
-            'michelines': michelines_serializer.errors
+            'michelins': michelins_serializer.errors
         }
         raise serializers.ValidationError(errors)
 
