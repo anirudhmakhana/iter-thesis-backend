@@ -30,7 +30,7 @@ class Contact(models.Model):
         models.EmailField(max_length=100, null=True, blank=True), blank=True, default=list
     )
     urls = ArrayField(
-        models.URLField(max_length=200, null=True, blank=True), blank=True, default=list, null=True
+        models.CharField(max_length=200, null=True, blank=True), blank=True, default=list, null=True
     )
 
 #Class used in Restaurant, Shop, Attraction
@@ -46,7 +46,7 @@ class Fee(models.Model):
     foreigner_adult = models.FloatField(default=0) 
 
 class Michelin(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, null=True, blank=True)
     year = models.IntegerField(null=True, blank=True)
 
 class Place(models.Model): 
@@ -95,7 +95,7 @@ class Restaurant(Place):
     # michelines = models.CharField(max_length=255)
     tags = ArrayField(models.CharField(max_length=100), blank=True, null=True)
     opening_hours = models.ManyToManyField(OpeningHour, related_name='restaurant_opening_hours', null=True, blank=True, default=list)
-    michelins = models.ManyToManyField(Michelin, blank=True)
+    michelins = models.ManyToManyField(Michelin, blank=True, null=True)
 
 class Shop(Place): 
     standard = models.CharField(max_length=255, null=True, blank=True)
