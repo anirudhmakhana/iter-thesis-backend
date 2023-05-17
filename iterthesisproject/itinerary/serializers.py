@@ -22,7 +22,7 @@ class AgendaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Agenda
-        fields = ['id', 'place_id', 'date', 'arrival_time', 'leave_time']
+        fields = ['id', 'place_id', 'date', 'arrival_time', 'leave_time', 'travel_time']
     
     def create(self, validated_data):
         print(validated_data.keys())
@@ -72,4 +72,4 @@ class ItinerarySerializer(serializers.ModelSerializer):
 class UserPreferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserPreference
-        fields = ['destination', 'start_date', 'end_date', 'start_time', 'end_time', 'budget', 'tripType', 'targetTypes', 'preferredActivities', 'preferredCuisine', 'dietRestrictions']
+        fields = ['destination', 'start_date', 'end_date', 'start_time', 'end_time', 'budget', 'tripType', 'targetTypes', 'preferredActivities', 'preferredCuisine', 'owner', 'co_travelers']

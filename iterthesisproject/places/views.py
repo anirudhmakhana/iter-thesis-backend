@@ -6,7 +6,13 @@ from .models import Place, Accommodation, Restaurant, Shop, Attraction
 from .serializers import PlaceSerializer, AccommodationSerializer, RestaurantSerializer, ShopSerializer, AttractionSerializer
 from django.db import IntegrityError
 from rest_framework.exceptions import ValidationError
+from django.core.paginator import Paginator
+from rest_framework.pagination import PageNumberPagination
 
+class PlacePagination(PageNumberPagination):
+    page_size = 100  # Number of places per page
+    page_size_query_param = 'page_size'
+    max_page_size = 1000  # Maximum number of places per page
 
 class PlaceView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -16,8 +22,11 @@ class PlaceView(APIView):
     """
     def get(self, request):
         places = Place.objects.all()
-        serializer = PlaceSerializer(places, many=True)
-        return Response(serializer.data)
+        # Apply pagination
+        paginator = PlacePagination()
+        paginated_places = paginator.paginate_queryset(places, request)
+        serializer = PlaceSerializer(paginated_places, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
     def post(self, request):
         serializer = PlaceSerializer(data=request.data)

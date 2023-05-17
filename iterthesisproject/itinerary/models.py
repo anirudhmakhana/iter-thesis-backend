@@ -11,7 +11,7 @@ class Agenda(models.Model):
     '''
     {other_place: 10, other_placeA: 25, ...}
     '''
-    travel_time = JSONField(default=dict)
+    travel_time = models.CharField(max_length=1000, default='')
     arrival_time = models.TimeField()
     leave_time = models.TimeField()
 
@@ -37,3 +37,5 @@ class UserPreference(models.Model):
     targetTypes = ArrayField(models.CharField(max_length=100))
     preferredActivities = ArrayField(models.CharField(max_length=100))
     preferredCuisine = ArrayField(models.CharField(max_length=100))
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='preference_owner')
+    co_travelers = models.ManyToManyField(User, related_name='preference_co',  blank=True)

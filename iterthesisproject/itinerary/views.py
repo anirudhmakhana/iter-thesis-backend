@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from itinerary.models import Itinerary, Agenda, UserPreference
 from itinerary.serializers import ItinerarySerializer, AgendaSerializer, UserPreferenceSerializer
+import requests
 
 class AgendaListCreateView(APIView):
     """
@@ -134,7 +135,7 @@ class ItineraryView(APIView):
         except Itinerary.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        if request.user == itinerary.owner or request.user in itinerary.co_travellers.all():
+        if request.user == itinerary.owner or request.user in itinerary.co_travelers.all():
             serializer = ItinerarySerializer(itinerary)
             return Response(serializer.data)
         else:
@@ -246,28 +247,29 @@ class UserPreferenceView(APIView):
         serializer = UserPreferenceSerializer(user_preferences, many=True)
         return Response(serializer.data)
 
-    def post(self, request, format=None):
-        serializer = UserPreferenceSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
     # def post(self, request, format=None):
     #     serializer = UserPreferenceSerializer(data=request.data)
     #     if serializer.is_valid():
-    #         user_preference = serializer.save(user=request.user) # pass in the user object
-            
-    #         # Send a POST request to another server with the user's preferences
-    #         url = "http://example.com/preferences/"
-    #         data = serializer.data
-    #         response = requests.post(url, json=data)
-    #         if response.status_code == 200:
-    #             user_preference.sent_to_server = True
-    #             user_preference.save()
-            
+    #         serializer.save(user=request.user)
     #         return Response(serializer.data, status=status.HTTP_201_CREATED)
     #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request, format=None):
+        serializer = UserPreferenceSerializer(data=request.data)
+        if serializer.is_valid():
+            user_preference = serializer.save(user=request.user) # pass in the user object
+            
+            # Send a POST request to another server with the user's preferences
+            url = "https://22cd-125-24-236-177.ngrok-free.app/api/recommenditinerary"
+            data = serializer.data
+            response = requests.post(url, json=data)
+            if response.status_code == 200:
+                user_preference.sent_to_server = True
+                user_preference.save()
+            
+            # return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(response.json, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserPreferenceDetail(APIView):
     """
