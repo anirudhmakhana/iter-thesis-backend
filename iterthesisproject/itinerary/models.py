@@ -8,10 +8,7 @@ from django.db.models import JSONField
 class Agenda(models.Model):
     place = models.ForeignKey(Place, on_delete=models.CASCADE, related_name='agenda_place')
     date = models.DateField()
-    '''
-    {other_place: 10, other_placeA: 25, ...}
-    '''
-    travel_time = models.CharField(max_length=1000, default='')
+    travel_time = models.JSONField(default=dict)
     arrival_time = models.TimeField()
     leave_time = models.TimeField()
 

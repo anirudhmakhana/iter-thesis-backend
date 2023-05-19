@@ -68,6 +68,26 @@ class ItinerarySerializer(serializers.ModelSerializer):
             itinerary.co_travelers.add(traveler)
 
         return itinerary
+
+    def update(self, instance, validated_data):
+        instance.destination = validated_data.get('destination', instance.destination)
+        instance.start_date = validated_data.get('start_date', instance.start_date)
+        instance.end_date = validated_data.get('end_date', instance.end_date)
+        instance.start_time = validated_data.get('start_time', instance.start_time)
+        instance.end_time = validated_data.get('end_time', instance.end_time)
+
+        plan_data = validated_data.get('plan')
+        if plan_data is not None:
+            instance.plan.clear()  # Remove existing plan items
+
+            for agenda_data in plan_data:
+                agenda_serializer = AgendaSerializer(data=agenda_data)
+                agenda_serializer.is_valid(raise_exception=True)
+                agenda_serializer.save()
+                instance.plan.add(agenda_serializer.instance)
+
+        instance.save()
+        return instance
     
 class UserPreferenceSerializer(serializers.ModelSerializer):
     class Meta:

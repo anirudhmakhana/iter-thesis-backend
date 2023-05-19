@@ -162,7 +162,7 @@ class ItineraryView(APIView):
         except Itinerary.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        if request.user != itinerary.owner and request.user not in itinerary.co_travellers.all():
+        if request.user != itinerary.owner and request.user not in itinerary.co_travelers.all():
             return Response(status=status.HTTP_403_FORBIDDEN)
 
         serializer = ItinerarySerializer(itinerary, data=request.data)
@@ -177,7 +177,7 @@ class ItineraryView(APIView):
         except Itinerary.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        if request.user != itinerary.owner and request.user not in itinerary.co_travellers.all():
+        if request.user != itinerary.owner and request.user not in itinerary.co_travelers.all():
             return Response(status=status.HTTP_403_FORBIDDEN)
 
         itinerary.delete()
