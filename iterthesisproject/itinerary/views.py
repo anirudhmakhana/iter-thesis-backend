@@ -130,16 +130,33 @@ class ItineraryView(APIView):
     # permission_classes = (IsAuthenticated,)
 
     def get(self, request, pk=None):
-        try:
-            itinerary = Itinerary.objects.get(pk=pk)
-        except Itinerary.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        if request.user == itinerary.owner or request.user in itinerary.co_travelers.all():
-            serializer = ItinerarySerializer(itinerary)
+        if pk is None:
+            itineraries = Itinerary.objects.filter(owner=request.user)
+            serializer = ItinerarySerializer(itineraries, many=True)
             return Response(serializer.data)
         else:
-            return Response(status=status.HTTP_403_FORBIDDEN)
+            try:
+                itinerary = Itinerary.objects.get(pk=pk)
+            except Itinerary.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            if request.user == itinerary.owner or request.user in itinerary.co_travelers.all():
+                serializer = ItinerarySerializer(itinerary)
+                return Response(serializer.data)
+            else:
+                return Response(status=status.HTTP_403_FORBIDDEN)
+    
+    # def get(self, request, pk=None):
+    #     try:
+    #         itinerary = Itinerary.objects.get(pk=pk)
+    #     except Itinerary.DoesNotExist:
+    #         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    #     if request.user == itinerary.owner or request.user in itinerary.co_travelers.all():
+    #         serializer = ItinerarySerializer(itinerary)
+    #         return Response(serializer.data)
+    #     else:
+    #         return Response(status=status.HTTP_403_FORBIDDEN)
 
     def post(self, request):
         print(request.data)
