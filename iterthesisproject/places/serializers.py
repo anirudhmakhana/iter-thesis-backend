@@ -69,6 +69,14 @@ class AccommodationSerializer(serializers.ModelSerializer):
             'accomodation_types',
             'accomodation_rooms'
         )
+    
+    def to_representation(self, instance):
+        """
+        Add 'id' field to serialized representation.
+        """
+        data = super().to_representation(instance)
+        data['id'] = instance.id
+        return data
 
     def create(self, validated_data):
         location_data = validated_data.pop('location')
@@ -158,6 +166,14 @@ class ShopSerializer(serializers.ModelSerializer):
             'shop_type',
             'opening_hours',
         )
+    
+    def to_representation(self, instance):
+        """
+        Add 'id' field to serialized representation.
+        """
+        data = super().to_representation(instance)
+        data['id'] = instance.id
+        return data
 
     def create(self, validated_data):
         location_data = validated_data.pop('location')
@@ -226,6 +242,14 @@ class AttractionSerializer(serializers.ModelSerializer):
             'fee',
             'opening_hours',
         )
+
+    def to_representation(self, instance):
+        """
+        Add 'id' field to serialized representation.
+        """
+        data = super().to_representation(instance)
+        data['id'] = instance.id
+        return data
 
     def create(self, validated_data):
         location_data = validated_data.pop('location')
@@ -300,6 +324,14 @@ class RestaurantSerializer(serializers.ModelSerializer):
             'michelins',
         )
 
+    def to_representation(self, instance):
+        """
+        Add 'id' field to serialized representation.
+        """
+        data = super().to_representation(instance)
+        data['id'] = instance.id
+        return data
+
     def create(self, validated_data):
         location_data = validated_data.pop('location')
         sha_data = validated_data.pop('sha')
@@ -350,6 +382,14 @@ class PlaceSerializer(serializers.ModelSerializer):
                   'introduction', 'detail', 'destination', 'category_code', 'category_description',
                   'how_to_travels', 'mobile_picture_urls', 'web_picture_urls', 'payment_methods',
                   'facilities', 'services']
+        
+    def to_representation(self, instance):
+        """
+        Add 'id' field to serialized representation.
+        """
+        data = super().to_representation(instance)
+        data['id'] = instance.id
+        return data
 
     def create(self, validated_data):
         location_data = validated_data.pop('location')
