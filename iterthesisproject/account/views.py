@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate
 from account.renderers import UserRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
+from .models import User
 
 # Create your views here.
 
@@ -41,11 +42,21 @@ class UserLoginView(APIView):
     return Response({'errors':{'non_field_errors':['Email or Password is not Valid']}}, status=status.HTTP_404_NOT_FOUND)
 
 class UserProfileView(APIView):
-#   renderer_classes = [UserRenderer]
-  permission_classes = [IsAuthenticated]
-  def get(self, request, format=None):
-    serializer = UserProfileSerializer(request.user)
-    return Response(serializer.data, status=status.HTTP_200_OK) 
+    # renderer_classes = [UserRenderer]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, id=None, format=None):
+        if id is not None:
+            try:
+                user = User.objects.get(id=id)
+            except User.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            serializer = UserProfileSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        serializer = UserProfileSerializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)   
 
 class UserChangePasswordView(APIView):
 #   renderer_classes = [UserRenderer]
@@ -54,6 +65,19 @@ class UserChangePasswordView(APIView):
     serializer = UserChangePasswordSerializer(data=request.data, context={'user':request.user})
     serializer.is_valid(raise_exception=True)
     return Response({'msg':'Password Changed Successfully'}, status=status.HTTP_200_OK)
+  
+class UserIdFromEmailView(APIView):
+    def get(self, request, format=None):
+        email = request.GET.get('email')
+        if not email:
+            return Response("Email parameter is required.", status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response("User not found.", status=status.HTTP_404_NOT_FOUND)
+
+        return Response({'user_id': user.id}, status=status.HTTP_200_OK)
 
 class SendPasswordResetEmailView(APIView):
 #   renderer_classes = [UserRenderer]

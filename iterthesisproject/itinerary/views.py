@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from itinerary.models import Itinerary, Agenda, UserPreference
 from itinerary.serializers import ItinerarySerializer, AgendaSerializer, UserPreferenceSerializer
 import requests
+from django.db.models import Q
 
 class AgendaListCreateView(APIView):
     """
@@ -131,7 +132,7 @@ class ItineraryView(APIView):
 
     def get(self, request, pk=None):
         if pk is None:
-            itineraries = Itinerary.objects.filter(owner=request.user)
+            itineraries = Itinerary.objects.filter(Q(owner=request.user) | Q(co_travelers=request.user))
             serializer = ItinerarySerializer(itineraries, many=True)
             return Response(serializer.data)
         else:

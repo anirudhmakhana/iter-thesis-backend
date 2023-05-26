@@ -75,7 +75,14 @@ class ItinerarySerializer(serializers.ModelSerializer):
         instance.end_date = validated_data.get('end_date', instance.end_date)
         instance.start_time = validated_data.get('start_time', instance.start_time)
         instance.end_time = validated_data.get('end_time', instance.end_time)
+        
+        co_travelers_data = validated_data.get('co_travelers')
+        if co_travelers_data is not None:
+            instance.co_travelers.clear()  # Remove existing co_travelers
 
+            for traveler in co_travelers_data:
+                instance.co_travelers.add(traveler)
+        
         plan_data = validated_data.get('plan')
         if plan_data is not None:
             instance.plan.clear()  # Remove existing plan items
